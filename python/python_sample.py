@@ -205,7 +205,7 @@ def forwardPropagate(model, data_x_part):
 def backwardPropagate(model, Intermediates, truth_y):
     # Prepare 'Z' and 'A' for convenient notation which would be used later.
     Z, A = {}, []
-    for i in range(len(Intermediates))
+    for i in range(len(Intermediates)):
         Z[i-1] = Intermediates[i]['pre_act']
         A[i-1] = Intermediates[i]['post_act']
     
