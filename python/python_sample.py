@@ -307,8 +307,8 @@ def generatePkFromSource():
     # Prepare absolute paths of input files
     working_dir           = pathlib.Path().absolute()
     train_image_file_path = os.path.join(working_dir, "train-images.idx3-ubyte")
-    train_label_file_path = os.path.join(working_dir, "tn-labels.idx1-ubyte")
-    test_image_file_path  = os.path.join(working_dir, "tk-images.idx3-ubyte")
+    train_label_file_path = os.path.join(working_dir, "train-labels.idx1-ubyte")
+    test_image_file_path  = os.path.join(working_dir, "t10k-images.idx3-ubyte")
     test_label_file_path  = os.path.join(working_dir, "t10k-labels.idx1-ubyte")
     
     print("Load data (may take a few minutes).")
@@ -329,7 +329,7 @@ if __name__ == "__main__":
     generatePkFromSource()
     
     print("Load data from .pickle.")
-    with open('train-image.pickle', 'rb') as fp: train_x_part = pickle.load(fp)
+    with open('train-images.pickle', 'rb') as fp: train_x_part = pickle.load(fp)
     with open('train-labels.pickle', 'rb') as fp: train_y_part = pickle.load(fp)
     with open('test-images.pickle', 'rb') as fp: test_x_part = pickle.load(fp)
     with open('test-labels.pickle', 'rb') as fp: test_y_part = pickle.load(fp)
