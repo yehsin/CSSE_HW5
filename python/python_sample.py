@@ -34,7 +34,7 @@ class CONST:
     v_t_ratio  = lambda : 0.3                               # validation_training_ration
     epoch      = lambda : 3
 
-
+##test
 class FUNC:
     # Define some basic functions
     dReLU = lambda x : (x > 0.0).astype(numpy.float)        # 1st Derivative of reLU w.r.t. 'x', i.e., unit step function
