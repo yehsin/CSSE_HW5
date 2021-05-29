@@ -55,7 +55,7 @@ class MODEL:
     # 'W' : a list of weight matrices. E.g., W[0] is the weight matrix connected input layer and 1st hidden layer.
     def __init__(self, network_struct, learning_rate, bias=None):
         # Local variables
-        self.network_struct = networ_struct
+        self.network_struct = network_struct
         self.learning_rate = learning_rate 
         self.W = initWeights(network_struct) # Initialize weight metrices
 
@@ -63,7 +63,7 @@ class MODEL:
 ########## Functions ##########
 def initWeights(network_struct):
     numpy.random.seed()
-    
+    network_struct[1] = int(network_struct[1],base=16)
     # Each weight is initialized from Gaussian distribution with standard deviation sqrt(1/network_struct[0])
     weight_list = [numpy.random.randn(network_struct[i], network_struct[i+1]) / numpy.sqrt(network_struct[0]) 
                    for i in range(len(network_struct)-1)]
@@ -103,9 +103,11 @@ def makeDataBatches(batch_size, data_x_part, data_y_part):
     
     while True:
         if (start+batch_size) > data_x_part.shape[1]:
-            continue
+            break
         index_list.append( (start, start+batch_size) )
         start += batch_size
+        
+        
     index_list.append( (start, data_x_part.shape[1]) )
     
     list_of_list = []
@@ -137,11 +139,9 @@ def trainModel(num_epochs, model, train_x_part, train_y_part, valid_x_part, vali
     # STEP1: Split training data into many mini-batches
     batch_list = makeDataBatches(CONST.batch_size(), train_x_part, train_y_part)
     printEpochAndLoss(model, valid_x_part, valid_y_part, 0.1)
-    
     # STEP2: Mini-batch gradient descent
     for epoch in range(num_epochs):
         n = train_x_part.shape[1]
-        
         # Process every batch
         for one_batch in batch_list:
             accum_nabla_W = [numpy.zeros(each_W_matrix.shape) for each_W_matrix in model.W] # Initialization ${\nebla}W$
@@ -189,7 +189,6 @@ def updateModelWeight(update_method, model, nabla_W, batch_size=0):
 
 def forwardPropagate(model, data_x_part):
     h = [{'pre_act': data_x_part, 'post_act': data_x_part}]
-    
     for layer_index in range(len(model.network_struct)-1):
         if layer_index in list(range(len(model.network_struct)-2)): # hidden layer
             pre_act  = calcPreActZ(model.W[layer_index], h[-1]['post_act'])
@@ -204,7 +203,7 @@ def forwardPropagate(model, data_x_part):
 
 def backwardPropagate(model, Intermediates, truth_y):
     # Prepare 'Z' and 'A' for convenient notation which would be used later.
-    Z, A = {}, []
+    Z, A = {}, {}
     for i in range(len(Intermediates)):
         Z[i-1] = Intermediates[i]['pre_act']
         A[i-1] = Intermediates[i]['post_act']
@@ -338,7 +337,7 @@ if __name__ == "__main__":
     # Shuffle data
     shuffle      = numpy.random.permutation(train_x_part.shape[1])
     train_x_part = train_x_part[:, shuffle]
-    train_y_part = train_x_part[:, shuffle]
+    train_y_part = train_y_part[:, shuffle]
     shuffle      = numpy.random.permutation(test_x_part.shape[1])
     test_x_part  = test_x_part[:, shuffle]
     test_y_part  = test_y_part[:, shuffle]
@@ -346,14 +345,14 @@ if __name__ == "__main__":
     print("Generate training set & validation set.")
     # Splitting TRAINING data into validation set (30%) and training set (70%)
     valid_num        = int(train_x_part.shape[1] * CONST.v_t_ratio())
-    train_x_part_P30 = train_x_part[:, valid_num:]
+    train_x_part_P30 = train_x_part[:, :valid_num]
     train_x_part_P70 = train_x_part[:, valid_num:]
     train_y_part_P30 = train_y_part[:, :valid_num]
     train_y_part_P70 = train_y_part[:, valid_num:]
     
     nn_struct = [CONST.input_dim(), 'aaa', 3, CONST.output_dim()]
     HW1_NN    = MODEL(network_struct=nn_struct, learning_rate=0.05)
-    
+
     print("Start training a model.\n")
     HW1_NN = trainModel(CONST.epoch(), HW1_NN, train_x_part_P70, train_y_part_P70, train_x_part_P30, train_y_part_P30)
     print("\nEnd training.")
