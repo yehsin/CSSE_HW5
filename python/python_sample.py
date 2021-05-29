@@ -290,7 +290,7 @@ def avoidZeroValue(numpy_ndarray):
 def printEpochAndLoss(model, data_x_part, data_y_part, epoch):
     ce_loss = 0.0
     predict_y_s = inference(model, data_x_part)
-    for i in range(predict_y_s.shape[1])
+    for i in range(predict_y_s.shape[1]):
         ce_loss += FUNC.crossEntropy(predict_y_s[:, i], data_y_part[:, i])
     print("Epoch=%d, Total loss=%.2f"%(int(epoch), ce_loss/epoch))
 
