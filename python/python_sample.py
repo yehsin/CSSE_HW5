@@ -290,7 +290,7 @@ def avoidZeroValue(numpy_ndarray):
 def printEpochAndLoss(model, data_x_part, data_y_part, epoch):
     ce_loss = 0.0
     predict_y_s = inference(model, data_x_part)
-    for i in range(predict_y_s.shape[1])
+    for i in range(predict_y_s.shape[1]):
         ce_loss += FUNC.crossEntropy(predict_y_s[:, i], data_y_part[:, i])
     print("Epoch=%d, Total loss=%.2f"%(int(epoch), ce_loss/epoch))
 
@@ -313,8 +313,8 @@ def generatePkFromSource():
     
     print("Load data (may take a few minutes).")
     # Load data from files
-    train_x_part, train_y_part = loaddata(train_image_file_path, train_label_file_path)
-    test_x_part, test_y_part   = loaddata(test_image_file_path, test_label_file_path)
+    train_x_part, train_y_part = loadData(train_image_file_path, train_label_file_path)
+    test_x_part, test_y_part   = loadData(test_image_file_path, test_label_file_path)
     
     print("Store data from memory into .pickle file.")
     with open('train-images.pickle', 'wb') as fp: pickle.dump(train_x_part, fp)
